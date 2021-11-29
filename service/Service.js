@@ -6,7 +6,7 @@ const addMentor = async (req, res) => {
   try {
     const { error, value } = schema.mentor.validate(req.body);
     if (error) return res.status(400).send({ error: error.details[0].message });
-
+    value.email = value.email.toLowerCase();
     const mentor = await mongo.db.collection("mentor").findOne({ email: value.email });
     if (mentor) return res.status(400).send({ error: "mentor already exists" });
     const checkstudent = await mongo.db.collection("student").findOne({ email: value.email });
@@ -23,6 +23,7 @@ const addStudent = async (req, res) => {
   try {
     const { error, value } = schema.student.validate(req.body);
     if (error) return res.status(400).send({ error: error.details[0].message });
+    value.email = value.email.toLowerCase();
     const student = await mongo.db.collection("student").findOne({ email: value.email });
     if (student) return res.status(400).send({ error: "student already exists" });
     const checkmentor = await mongo.db.collection("mentor").findOne({ email: value.email });
