@@ -1,6 +1,7 @@
 const mongo = require("../db/mongodb");
 const schema = require("../schema/schema");
 const ObjectId = require("mongodb").ObjectId;
+
 const addMentor = async (req, res) => {
   try {
     const { error, value } = schema.mentor.validate(req.body);
@@ -8,6 +9,8 @@ const addMentor = async (req, res) => {
 
     const mentor = await mongo.db.collection("mentor").findOne({ email: value.email });
     if (mentor) return res.status(400).send({ error: "mentor already exists" });
+    const checkstudent = await mongo.db.collection("student").findOne({ email: value.email });
+    if (checkstudent) return res.status(400).send({ error: "already added as student" });
 
     await mongo.db.collection("mentor").insertOne(value);
     res.send(value);
@@ -22,6 +25,9 @@ const addStudent = async (req, res) => {
     if (error) return res.status(400).send({ error: error.details[0].message });
     const student = await mongo.db.collection("student").findOne({ email: value.email });
     if (student) return res.status(400).send({ error: "student already exists" });
+    const checkmentor = await mongo.db.collection("mentor").findOne({ email: value.email });
+    if (checkmentor) return res.status(400).send({ error: "already added as mentor" });
+    
     await mongo.db.collection("student").insertOne(value);
     res.send(value);
   } catch (error) {
