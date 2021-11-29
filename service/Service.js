@@ -10,7 +10,7 @@ const addMentor = async (req, res) => {
     const mentor = await mongo.db.collection("mentor").findOne({ email: value.email });
     if (mentor) return res.status(400).send({ error: "mentor already exists" });
     const checkstudent = await mongo.db.collection("student").findOne({ email: value.email });
-    if (checkstudent) return res.status(400).send({ error: "already added as student" });
+    if (checkstudent) return res.status(400).send({ error: "already exists as student" });
 
     await mongo.db.collection("mentor").insertOne(value);
     res.send(value);
@@ -27,7 +27,7 @@ const addStudent = async (req, res) => {
     const student = await mongo.db.collection("student").findOne({ email: value.email });
     if (student) return res.status(400).send({ error: "student already exists" });
     const checkmentor = await mongo.db.collection("mentor").findOne({ email: value.email });
-    if (checkmentor) return res.status(400).send({ error: "already added as mentor" });
+    if (checkmentor) return res.status(400).send({ error: "already exists as mentor" });
     
     await mongo.db.collection("student").insertOne(value);
     res.send(value);
