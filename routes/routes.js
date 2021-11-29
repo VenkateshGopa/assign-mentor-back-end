@@ -3,6 +3,7 @@ const service = require('../service/Service');
 
 const route = express.Router();
 
+route.get('/', (req, res) =>{res.send("Assign-Mentor Api")});
 route.get('/mentors', service.mentors);
 route.get('/students', service.students);
 route.post('/addmentor', service.addMentor);
